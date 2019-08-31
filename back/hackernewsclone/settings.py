@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "hackernewsclone",
     "channels",
-    "graphene_django"
+    "graphene_django",
 ]
 
 MIDDLEWARE = [
@@ -102,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ASGI_APPLICATION = "hackernewsclone.routing.application"
 
-GRAPHENE = {"SCHEMA": "hackernewsclone.graphql_schema.schema"}
+GRAPHENE = {"SCHEMA": "hackernewsclone.graphql_config.schema"}
 
 CHANNELS_WS_PROTOCOLS = ["graphql-ws"]
 

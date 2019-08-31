@@ -10,8 +10,7 @@ class Writer(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=250)
-    writer = models.OneToOneField(Writer, on_delete=models.DO_NOTHING)
+    author = models.OneToOneField(Writer, on_delete=models.DO_NOTHING)
 
     def __repr__(self):
-        return f"Post[title={self.title}]"
-
+        return f"Post[title={self.title}, author={self.author.name}]"
