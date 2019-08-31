@@ -5,22 +5,21 @@ from hackernewsclone.graphql_config import schema
 
 
 QUERY = """
-            query {
-                allPosts {
-                    id
-                    title
-                }
-            }
-            """
+    query {
+        allPosts {
+            id
+            title
+        }
+    }"""
 
 WRONG_QUERY = """
-            query {
-                allPosts {
-                    id
-                    content
-                }
-            }
-            """
+    query {
+        allPosts {
+            id
+            content
+        }
+    }"""
+
 
 class MainTestCase(GraphQLTestCase):
     GRAPHQL_SCHEMA = schema
@@ -30,8 +29,7 @@ class MainTestCase(GraphQLTestCase):
         content = json.loads(response.content)
         self.assertResponseNoErrors(response)
 
-    def test_allPosts_query_should_return_no_error(self):
+    def test_allPosts_query_should_return_errors(self):
         response = self.query(WRONG_QUERY)
         content = json.loads(response.content)
         self.assertResponseHasErrors(response)
-
