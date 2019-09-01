@@ -23,8 +23,16 @@ class AddWriterMutation(DjangoModelFormMutation):
         form_class = WriterForm
 
 
+class AddPostMutation(DjangoModelFormMutation):
+    post = graphene.Field(PostType)
+
+    class Meta:
+        form_class = PostForm
+
+
 class Mutations(graphene.ObjectType):
     add_writer = AddWriterMutation.Field()
+    add_post = AddPostMutation.Field()
 
 
 class Query(graphene.ObjectType):
