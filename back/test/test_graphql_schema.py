@@ -21,6 +21,17 @@ WRONG_QUERY = """
     }"""
 
 
+MUTATION = """
+    mutation {
+        addWriter(input: {name: "Luis"}){
+            writer{
+                name
+                id
+            }
+        }
+  }"""
+
+
 class MainTestCase(GraphQLTestCase):
     GRAPHQL_SCHEMA = schema
 
@@ -33,3 +44,8 @@ class MainTestCase(GraphQLTestCase):
         response = self.query(WRONG_QUERY)
         content = json.loads(response.content)
         self.assertResponseHasErrors(response)
+
+    def test_addWriter_mutation_should_return_no_errors(self):
+        response = self.query(MUTATION)
+        content = json.loads(response.content)
+        self.assertResponseNoErrors(response)
