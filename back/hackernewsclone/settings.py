@@ -40,17 +40,21 @@ INSTALLED_APPS = [
     "hackernewsclone",
     "channels",
     "graphene_django",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CORS_ORIGIN_WHITELIST = ["https://localhost", "http://localhost"]
 
 ROOT_URLCONF = "hackernewsclone.urls"
 
@@ -104,12 +108,10 @@ ASGI_APPLICATION = "hackernewsclone.routing.application"
 
 GRAPHENE = {"SCHEMA": "hackernewsclone.graphql_config.schema"}
 
-CHANNELS_WS_PROTOCOLS = ["graphql-ws"]
-
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "asgiref.inmemory.ChannelLayer",
-        "ROUTING": "django_subscriptions.urls.channel_routing",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [("localhost", 6379)]},
     }
 }
 
