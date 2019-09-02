@@ -22,7 +22,7 @@ class PostForm(forms.ModelForm):
         return False
 
     def save(self, *args, **kwargs):
-        if self.is_valid:
+        if self.is_valid():
             obj = Post(
                 title=self.data["title"],
                 author=Writer.objects.get(name=self.data["author"]),

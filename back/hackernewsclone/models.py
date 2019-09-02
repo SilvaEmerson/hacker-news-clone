@@ -1,6 +1,10 @@
+import json
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+from hackernewsclone.signals import send_channel_message
 
 
 class Writer(models.Model):
@@ -23,5 +27,6 @@ class Post(models.Model):
 
 @receiver(post_save, sender=Post)
 def handle_new_post(*args, **kwargs):
-    print(args)
-    print(kwargs)
+    instance = kwargs["instance"]
+    message = {"title": instance.title, "author": instance.author.name}
+    send_channel_message(instance.author.name, message)

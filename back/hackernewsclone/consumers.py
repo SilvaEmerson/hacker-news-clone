@@ -1,33 +1,25 @@
-from channels.generic.websocket import WebsocketConsumer
 import json
+
+from asgiref.sync import async_to_sync
+from channels.generic.websocket import WebsocketConsumer
 
 
 class PostConsumer(WebsocketConsumer):
     def connect(self):
         self.author_name = self.scope["url_route"]["kwargs"]["author"]
-        print(self.scope)
+        print(self.channel_name)
         self.accept()
+        async_to_sync(self.channel_layer.group_add)(
+            self.author_name, self.channel_name
+        )
 
-    def disconnect(self, close_code):
-        pass
+    # message = json.dumps({'message': f'Listening to {self.author_name} new posts'})
+    # self.send(text_data=message)
 
-    def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-
+    def channel_message(self, event):
+        message = event["message"]
+        # Send message to WebSocket
         self.send(text_data=json.dumps({"message": message}))
 
-
-class WriterConsumer(WebsocketConsumer):
-    def connect(self):
-        self.author_name = self.scope["url_route"]["kwargs"]
-        self.accept()
-
     def disconnect(self, close_code):
-        pass
-
-    def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-
-        self.send(text_data=json.dumps({"message": message}))
+        print(f"Close connection[Error code={close_code}]")
