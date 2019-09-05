@@ -1,0 +1,49 @@
+version: "3"
+services:
+    redis:
+        image: redis:5.0-alpine
+        container_name: redis_1
+        env_file: .env
+        expose:
+            - 6379 
+    
+    nginx:
+        image: nginx:1.17-alpine
+        container_name: nginx_1
+        env_file: .env
+        ports:
+            - ${NGINX_PORT}:${NGINX_PORT}
+        volumes:
+            - ${NGINX_CONF}:/tmp/nginx.conf
+        command: /bin/sh -c "envsubst < /tmp/nginx.conf > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"
+        depends_on:
+            - redis
+            - back
+            - front
+
+    back:
+        env_file: .env
+        build:
+            context: ./back
+            args:
+                - DJANGO_KEY_ARG=${DJANGO_KEY}
+        depends_on:
+            - redis
+        expose:
+            - ${BACK_PORT}
+        volumes:
+            - ${BD_PATH}:/mnt/back/db.sqlite3
+        deploy:
+            replicas: 5
+            restart_policy:
+                condition: on-failure
+
+    front:
+        build: ./front
+        container_name: front_1
+        depends_on:
+            - redis
+            - back
+        env_file: .env
+        expose:
+            - ${FRONT_PORT}
