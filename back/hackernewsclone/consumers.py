@@ -7,7 +7,7 @@ from channels.generic.websocket import WebsocketConsumer
 class PostConsumer(WebsocketConsumer):
     def connect(self):
         self.author_name = self.scope["url_route"]["kwargs"]["author"]
-        print(self.channel_name)
+        print("New channel:", self.channel_name)
         self.accept()
         async_to_sync(self.channel_layer.group_add)(
             self.author_name, self.channel_name
