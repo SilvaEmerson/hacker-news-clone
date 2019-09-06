@@ -1,0 +1,20 @@
+# Installing dependecies
+
+You just need [Docker](https://docs.docker.com/install/linux/docker-ce/binaries/) and [docker-compose](https://docs.docker.com/compose/install/) already installed on your machine, and you can edit `.env.example` with your preffered settings, after that, make sure to rename to `.env`
+
+```shell
+docker-compose build
+```
+
+Next:
+
+```shell
+docker-compose up
+```
+
+If you want to run multiple backend instances you can run:
+
+```shell
+docker-compose --compatibility up
+```
+
