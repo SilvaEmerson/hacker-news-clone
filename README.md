@@ -8,6 +8,12 @@ You just need [Docker](https://docs.docker.com/install/linux/docker-ce/binaries/
 docker-compose build
 ```
 
+If you're running on the first time, apply the database migrations:
+
+```shell
+docker-compose run back python /mnt/back/manage.py migrate
+```
+
 Next:
 
 ```shell

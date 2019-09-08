@@ -44,8 +44,6 @@ services:
             - db
         expose:
             - ${BACK_PORT}
-        volumes:
-            - ./back:/mnt/back/
         deploy:
             replicas: 5
             restart_policy:
