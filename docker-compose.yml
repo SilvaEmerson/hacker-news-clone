@@ -7,6 +7,15 @@ services:
         expose:
             - 6379 
     
+    db:
+        image: postgres:11-alpine
+        container_name: bd_1
+        env_file: .env
+        volumes:
+            - ${DIR_BD_DATA}:/var/lib/postgresql/data
+        expose:
+            - 5432
+
     nginx:
         image: nginx:1.17-alpine
         container_name: nginx_1
@@ -27,12 +36,16 @@ services:
             context: ./back
             args:
                 - DJANGO_KEY_ARG=${DJANGO_KEY}
+                - POSTGRES_NAME_ARG=${POSTGRES_NAME}
+                - POSTGRES_USER_ARG=${POSTGRES_USER}
+                - POSTGRES_PASSWORD_ARG=${POSTGRES_PASSWORD}
         depends_on:
             - redis
+            - db
         expose:
             - ${BACK_PORT}
         volumes:
-            - ${BD_PATH}:/mnt/back/db.sqlite3
+            - ./back:/mnt/back/
         deploy:
             replicas: 5
             restart_policy:
