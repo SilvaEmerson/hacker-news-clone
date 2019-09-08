@@ -86,8 +86,12 @@ WSGI_APPLICATION = "hackernewsclone.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_NAME"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": "db",
+        "PORT": "5432"
     }
 }
 
@@ -115,7 +119,7 @@ GRAPHENE = {"SCHEMA": "hackernewsclone.graphql_config.schema"}
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {"hosts": [("localhost", 6379)]},
+        "CONFIG": {"hosts": [(os.getenv("REDIS_HOST"), 6379)]},
     }
 }
 
