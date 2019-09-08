@@ -8,7 +8,7 @@ from hackernewsclone.signals import send_channel_message
 
 
 class Writer(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, unique=True)
 
     def __str__(self):
         return self.name
@@ -18,7 +18,7 @@ class Writer(models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=250)
+    title = models.CharField(max_length=250, unique=True)
     author = models.ForeignKey(Writer, on_delete=models.DO_NOTHING)
 
     def __repr__(self):
