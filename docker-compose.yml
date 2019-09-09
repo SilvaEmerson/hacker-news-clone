@@ -5,14 +5,14 @@ services:
         container_name: redis_1
         env_file: .env
         expose:
-            - 6379 
-    
+            - 6379
+
     db:
         image: postgres:11-alpine
         container_name: bd_1
         env_file: .env
         volumes:
-            - ${DIR_BD_DATA}:/var/lib/postgresql/data
+            - ${DIR_BD_DATA}:/var/lib/postgresql/data:rw
         expose:
             - 5432
 
@@ -34,11 +34,6 @@ services:
         env_file: .env
         build:
             context: ./back
-            args:
-                - DJANGO_KEY_ARG=${DJANGO_KEY}
-                - POSTGRES_NAME_ARG=${POSTGRES_NAME}
-                - POSTGRES_USER_ARG=${POSTGRES_USER}
-                - POSTGRES_PASSWORD_ARG=${POSTGRES_PASSWORD}
         depends_on:
             - redis
             - db
