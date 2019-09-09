@@ -15,6 +15,7 @@ cryptography==2.7
 daphne==2.3.0
 Django==2.2.4
 django-cors-headers==3.1.0
+django-filter==2.2.0
 graphene==2.1.8
 graphene-django==2.5.0
 graphql-core==2.2.1

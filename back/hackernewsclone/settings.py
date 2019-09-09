@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("DJANGO_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "back"]
 
@@ -90,8 +90,8 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_NAME"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "db",
-        "PORT": "5432"
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": "5432",
     }
 }
 
