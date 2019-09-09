@@ -1,19 +1,39 @@
+from functools import lru_cache
+
 import graphene
+from graphene import Node
+from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.forms.mutation import DjangoModelFormMutation
 from graphene_django.types import DjangoObjectType
 
-from hackernewsclone.models import Post, Writer
 from hackernewsclone.forms import PostForm, WriterForm
+from hackernewsclone.models import Post, Writer
+
+
+class Connection(graphene.Connection):
+    class Meta:
+        abstract = True
+
+    total_count = graphene.Int()
+
+    def resolve_total_count(self, info):
+        return self.length
 
 
 class PostType(DjangoObjectType):
     class Meta:
         model = Post
+        interfaces = (Node,)
+        filter_fields = {"author__name": {"contains"}, "title": {"contains"}}
+        connection_class = Connection
 
 
 class WriterType(DjangoObjectType):
     class Meta:
         model = Writer
+        interfaces = (Node,)
+        filter_fields = {"name": {"contains"}}
+        connection_class = Connection
 
 
 class AddWriterMutation(DjangoModelFormMutation):
@@ -36,33 +56,10 @@ class Mutations(graphene.ObjectType):
 
 
 class Query(graphene.ObjectType):
-    all_posts = graphene.List(PostType)
-    all_writers = graphene.List(WriterType)
-    get_posts = graphene.List(
-        PostType, title=graphene.String(), author=graphene.String()
-    )
-    get_post = graphene.Field(PostType, id=graphene.Int())
-
-    def resolve_all_writers(self, info, **kwargs):
-        return Writer.objects.all()
-
-    def resolve_all_posts(self, info, **kwargs):
-        return Post.objects.select_related("author").all()
-
-    def resolve_get_posts(self, info, **kwargs):
-        title = kwargs.get("title", None)
-        author = kwargs.get("author", None)
-
-        if author:
-            return Post.objects.select_related("author").filter(
-                author__name=author
-            )
-
-        if title:
-            return Post.objects.filter(title__contains=title)
-
-    def resolve_get_post(self, info, **kwargs):
-        return Post.objects.get(pk=kwargs.get("id", None))
+    all_posts = DjangoFilterConnectionField(PostType)
+    all_writers = DjangoFilterConnectionField(WriterType)
+    post = Node.Field(PostType)
+    writer = Node.Field(WriterType)
 
 
 schema = graphene.Schema(query=Query, mutation=Mutations)
