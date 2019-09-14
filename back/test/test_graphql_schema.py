@@ -7,26 +7,33 @@ from hackernewsclone.graphql_config import schema
 QUERY = """
     query {
         allPosts {
-            id
-            title
+            edges {
+                node {
+                    id
+                    title
+                }
+            }
         }
     }"""
 
 WRONG_QUERY = """
     query {
         allPosts {
-            id
-            content
+            edges {
+                node {
+                    id
+                    content
+                }
+            }
         }
     }"""
 
 
 ADD_WRITER_MUTATION = """
     mutation {
-        addWriter(input: {name: "Luis"}){
-            writer{
-                name
-                id
+        addWriter(input: {name: "Luis"}) {
+            writer {
+              id
             }
         }
   }"""
@@ -34,21 +41,21 @@ ADD_WRITER_MUTATION = """
 
 ADD_POST_MUTATION = """
 mutation {
-    addPost(input: {title: "101 Things You Shouldn't Know", author: "Louis"}){
-        post{
-            title
-                author{
-                    name
-                }
-            }
+    addPost(input: {title: "101 Things You Shouldn't Know", author: "Louis"}) {
+        post {
+          title
+          author {
+            name
+          }
+        }
     }
 }
 """
 
 ADD_WRITER_MUTATION_WRONG = """
     mutation {
-        addWriter(input: {age: 18}){
-            writer{
+        addWriter(input: {age: 18}) {
+            writer {
                 name
                 id
             }
@@ -87,9 +94,9 @@ class MainTestCase(GraphQLTestCase):
     def test_addPost_mutation_should_not_return_None(self):
         add_author_query = self.query(
             """
-        mutation{
-            addWriter(input: {name: "Louis"}){
-                writer{
+        mutation {
+            addWriter(input: {name: "Louis"}) {
+                writer {
                     id
                     name
                 }
