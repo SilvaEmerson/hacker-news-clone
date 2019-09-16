@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from dotenv import load_dotenv
 
-if os.path.isfile("../.env"):
-    load_dotenv(dotenv_path="../.env")
+if os.path.isfile("../.env.dev"):
+    load_dotenv(dotenv_path="../.env.dev")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -104,17 +104,16 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 ASGI_APPLICATION = "hackernewsclone.routing.application"
 
-GRAPHENE = {"SCHEMA": "hackernewsclone.graphql_config.schema"}
+GRAPHENE = {
+    "SCHEMA": "hackernewsclone.graphql_config.schema",
+    "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware"],
+}
 
 CHANNEL_LAYERS = {
     "default": {
@@ -122,6 +121,11 @@ CHANNEL_LAYERS = {
         "CONFIG": {"hosts": [(os.getenv("REDIS_HOST"), 6379)]},
     }
 }
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

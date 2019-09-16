@@ -1,13 +1,15 @@
 from functools import lru_cache
 
 import graphene
+import graphql_jwt
 from graphene import Node
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.forms.mutation import DjangoModelFormMutation
 from graphene_django.types import DjangoObjectType
+from django.contrib.auth.models import User
 
-from hackernewsclone.forms import PostForm, WriterForm
-from hackernewsclone.models import Post, Writer
+from hackernewsclone.forms import PostForm, UserForm
+from hackernewsclone.models import Post
 
 
 class Connection(graphene.Connection):
@@ -24,23 +26,23 @@ class PostType(DjangoObjectType):
     class Meta:
         model = Post
         interfaces = (Node,)
-        filter_fields = {"author__name": {"contains"}, "title": {"contains"}}
+        filter_fields = {"author__username": {"contains"}, "title": {"contains"}}
         connection_class = Connection
 
 
-class WriterType(DjangoObjectType):
+class UserType(DjangoObjectType):
     class Meta:
-        model = Writer
+        model = User
         interfaces = (Node,)
-        filter_fields = {"name": {"contains"}}
+        filter_fields = {"username": {"contains"}}
         connection_class = Connection
 
 
-class AddWriterMutation(DjangoModelFormMutation):
-    writer = graphene.Field(WriterType)
+class AddUserMutation(DjangoModelFormMutation):
+    user = graphene.Field(UserType)
 
     class Meta:
-        form_class = WriterForm
+        form_class = UserForm
 
 
 class AddPostMutation(DjangoModelFormMutation):
@@ -51,15 +53,18 @@ class AddPostMutation(DjangoModelFormMutation):
 
 
 class Mutations(graphene.ObjectType):
-    add_writer = AddWriterMutation.Field()
+    add_user = AddUserMutation.Field()
     add_post = AddPostMutation.Field()
+    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()
 
 
 class Query(graphene.ObjectType):
     all_posts = DjangoFilterConnectionField(PostType)
-    all_writers = DjangoFilterConnectionField(WriterType)
+    all_writers = DjangoFilterConnectionField(UserType)
     post = Node.Field(PostType)
-    writer = Node.Field(WriterType)
+    user = Node.Field(UserType)
 
 
 schema = graphene.Schema(query=Query, mutation=Mutations)
