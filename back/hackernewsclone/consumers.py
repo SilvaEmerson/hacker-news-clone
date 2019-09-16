@@ -9,9 +9,7 @@ class PostConsumer(WebsocketConsumer):
         self.author_name = self.scope["url_route"]["kwargs"]["author"]
         print("New channel:", self.channel_name)
         self.accept()
-        async_to_sync(self.channel_layer.group_add)(
-            self.author_name, self.channel_name
-        )
+        async_to_sync(self.channel_layer.group_add)(self.author_name, self.channel_name)
 
     # message = json.dumps({'message': f'Listening to {self.author_name} new posts'})
     # self.send(text_data=message)

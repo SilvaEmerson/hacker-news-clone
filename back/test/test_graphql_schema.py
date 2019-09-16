@@ -22,7 +22,7 @@ WRONG_QUERY = """
             edges {
                 node {
                     id
-                    content
+                    invalidField
                 }
             }
         }
@@ -31,8 +31,8 @@ WRONG_QUERY = """
 
 ADD_WRITER_MUTATION = """
     mutation {
-        addWriter(input: {name: "Luis"}) {
-            writer {
+        addUser(input: {username: "Luis", email:"luis@example.com", password:"abc123"}) {
+            user {
               id
             }
         }
@@ -41,11 +41,11 @@ ADD_WRITER_MUTATION = """
 
 ADD_POST_MUTATION = """
 mutation {
-    addPost(input: {title: "101 Things You Shouldn't Know", author: "Louis"}) {
+    addPost(input: {title: "101 Things You Shouldn't Know", author: "Louis", content: "Demo"}) {
         post {
           title
           author {
-            name
+            username
           }
         }
     }
@@ -54,8 +54,8 @@ mutation {
 
 ADD_WRITER_MUTATION_WRONG = """
     mutation {
-        addWriter(input: {age: 18}) {
-            writer {
+        addUser(input: {username: "Luis", email:"luis@example.com", password:"abc123"}) {
+            user {
                 name
                 id
             }
@@ -95,10 +95,10 @@ class MainTestCase(GraphQLTestCase):
         add_author_query = self.query(
             """
         mutation {
-            addWriter(input: {name: "Louis"}) {
-                writer {
+            addUser(input: {username: "Louis", email:"luis@example.com", password:"abc123"}) {
+                user {
                     id
-                    name
+                    username
                 }
             }
         }
