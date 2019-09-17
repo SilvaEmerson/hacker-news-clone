@@ -9,6 +9,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="post", name="title", field=models.CharField(max_length=250)
+            model_name="post",
+            name="title",
+            field=models.CharField(max_length=250),
         )
     ]

@@ -8,5 +8,7 @@ class Migration(migrations.Migration):
     dependencies = [("hackernewsclone", "0001_initial")]
 
     operations = [
-        migrations.RenameField(model_name="post", old_name="writer", new_name="author")
+        migrations.RenameField(
+            model_name="post", old_name="writer", new_name="author"
+        )
     ]

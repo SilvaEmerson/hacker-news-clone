@@ -6,7 +6,9 @@ from hackernewsclone.models import Post
 
 class PostForm(forms.ModelForm):
     author = forms.ModelChoiceField(
-        queryset=User.objects.all().values_list("username", flat=True).distinct()
+        queryset=User.objects.all()
+        .values_list("username", flat=True)
+        .distinct()
     )
 
     class Meta:
@@ -19,7 +21,10 @@ class PostForm(forms.ModelForm):
         content = self.data.get("content", None)
 
         if author and title and content:
-            if User.objects.filter(username=author).exists() and len(content) > 0:
+            if (
+                User.objects.filter(username=author).exists()
+                and len(content) > 0
+            ):
                 return True
         return False
 
@@ -39,3 +44,15 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["username", "password", "email"]
+
+    def save(self, *args, **kwargs):
+        if self.is_valid():
+            print("Valid")
+            user = User.objects.create_user(
+                self.data["username"],
+                self.data["email"],
+                self.data["password"],
+            )
+            user.save()
+            return user
+        return "Invalid values"

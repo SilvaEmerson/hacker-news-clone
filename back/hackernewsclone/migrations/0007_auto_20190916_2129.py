@@ -7,23 +7,22 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('hackernewsclone', '0006_auto_20190909_1928'),
-    ]
+    dependencies = [("hackernewsclone", "0006_auto_20190909_1928")]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='content',
-            field=models.CharField(default='', max_length=1000),
+            model_name="post",
+            name="content",
+            field=models.CharField(default="", max_length=1000),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='post',
-            name='author',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL),
+            model_name="post",
+            name="author",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
-        migrations.DeleteModel(
-            name='Writer',
-        ),
+        migrations.DeleteModel(name="Writer"),
     ]

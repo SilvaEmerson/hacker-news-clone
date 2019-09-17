@@ -26,7 +26,10 @@ class PostType(DjangoObjectType):
     class Meta:
         model = Post
         interfaces = (Node,)
-        filter_fields = {"author__username": {"contains"}, "title": {"contains"}}
+        filter_fields = {
+            "author__username": {"contains"},
+            "title": {"contains"},
+        }
         connection_class = Connection
 
 
@@ -55,9 +58,10 @@ class AddPostMutation(DjangoModelFormMutation):
 class Mutations(graphene.ObjectType):
     add_user = AddUserMutation.Field()
     add_post = AddPostMutation.Field()
-    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-    verify_token = graphql_jwt.Verify.Field()
-    refresh_token = graphql_jwt.Refresh.Field()
+    token_auth = graphql_jwt.relay.ObtainJSONWebToken.Field()
+    verify_token = graphql_jwt.relay.Verify.Field()
+    refresh_token = graphql_jwt.relay.Refresh.Field()
+    revoke_token = graphql_jwt.relay.Revoke.Field()
 
 
 class Query(graphene.ObjectType):
