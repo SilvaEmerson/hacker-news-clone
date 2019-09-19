@@ -6,13 +6,14 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import gql from "graphql-tag";
 
-const GET_USER_TOKEN = gql`
+export const GET_USER_TOKEN = gql`
   mutation GetUserToken($username: String!, $password: String!) {
     tokenAuth(input: { username: $username, password: $password }) {
       token
     }
   }
 `;
+
 const useStyles = makeStyles(theme => ({
   container: {
     marginTop: theme.spacing(8),
@@ -30,13 +31,13 @@ export function Login() {
   const classes = useStyles();
   const [_, setCookie] = useCookies(["user-token"]);
   const [user, setUser] = useState({});
-  const [wasLoggedSucessfully, setWasLoggedSucessfully] = useState(null);
+  const [wasLoggedSuccesfully, setWasLoggedSuccessfully] = useState(null);
   const [getUserToken] = useMutation(GET_USER_TOKEN, {
     onCompleted: ({ tokenAuth }) => {
       setCookie("user-token", tokenAuth.token);
-      setWasLoggedSucessfully(s => true);
+      setWasLoggedSuccessfully(s => true);
     },
-    onError: err => setWasLoggedSucessfully(false)
+    onError: err => setWasLoggedSuccessfully(false)
   });
   const handleSubmit = ev => {
     ev.preventDefault();
@@ -72,8 +73,8 @@ export function Login() {
       <Button type="submit" variant="contained" color="primary">
         Login
       </Button>
-      {wasLoggedSucessfully !== null ? (
-        wasLoggedSucessfully ? (
+      {wasLoggedSuccesfully !== null ? (
+        wasLoggedSuccesfully ? (
           <h1> Sucess </h1>
         ) : (
           <h1>username or password incorrects</h1>
